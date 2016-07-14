@@ -3,6 +3,8 @@ defmodule Rumbl.VideoController do
 
   alias Rumbl.Video
 
+  plug :scrub_params, "video" when action in [:create, :update]
+
   def action(conn, _) do
     apply(__MODULE__, action_name(conn), [conn, conn.params, conn.assigns.current_user])
   end
