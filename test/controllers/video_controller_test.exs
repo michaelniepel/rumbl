@@ -35,4 +35,18 @@ defmodule Rumbl.VideoControllerTest do
     assert String.contains?(conn.resp_body, user_video.title)
     refute String.contains?(conn.resp_body, other_video.title)
   end
+
+  alias Rumbl.Video
+  @valid_attrs %{url: "http://youtube.com", title: "Video", description: "a video"}
+  @invalid_attrs %{title: "invalid"}
+
+  defp video_count(query), do: Repo.one(from v in query, select: count(v.id))
+
+  @tag login_as: "michael"
+  test "creates a video and redirects", %{conn: conn, user: user} do
+    conn = post conn, video_path(conn, :create), video: @valid_attrs
+    assert redirected_to(conn) == video_path(conn, :index)
+    assert Repo.get_by!(Video, @valid_attrs).user_id == user.id
+  end
+
 end
