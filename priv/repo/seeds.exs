@@ -12,7 +12,8 @@
 alias Rumbl.Repo
 alias Rumbl.Category
 
-Repo.delete_all(Category)
+# Repo.delete_all(Category)
 for category <- ~w(Action Drama Comedy Sci-fi Romance) do
-  Repo.insert!(%Category{name: category})
+  Repo.get_by(Category, name: category) ||
+    Repo.insert!(%Category{name: category})
 end
