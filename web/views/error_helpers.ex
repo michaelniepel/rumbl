@@ -37,4 +37,8 @@ defmodule Rumbl.ErrorHelpers do
       Gettext.dgettext(Rumbl.Gettext, "errors", msg, opts)
     end
   end
+
+  def translate_error(msg) do
+    Gettext.dgettext(Rumbl.Gettext, "errors", msg)
+  end
 end
