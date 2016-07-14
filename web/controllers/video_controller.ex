@@ -14,7 +14,7 @@ defmodule Rumbl.VideoController do
   end
 
   alias Rumbl.Category
-  plug :load_categories when action in [:new, :cerate, :edit, :update]
+  plug :load_categories when action in [:new, :create, :edit, :update]
 
   defp load_categories(conn, _) do
     query =
