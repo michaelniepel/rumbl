@@ -14,3 +14,6 @@ config :rumbl, Rumbl.Repo,
   adapter: Mongo.Ecto,
   database: "rumbl_test",
   pool_size: 1
+
+config :comeonin, :bcrypt_log_rounds, 4
+config :comeonin, :pbkdf2_rounds, 1
