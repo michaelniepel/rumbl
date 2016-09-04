@@ -6,6 +6,7 @@ defmodule Rumbl.AnnotationView do
       id: ann.id,
       body: ann.body,
       at: ann.at,
+      order: ann.order,
       user: render_one(ann.user, Rumbl.UserView, "user.json")
     }
   end

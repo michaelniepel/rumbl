@@ -1,17 +1,20 @@
+require IEx
 defmodule Rumbl.VideoChannel do
   use Rumbl.Web, :channel
 
-  def join("videos:" <> video_id, _params, socket) do
+  def join("videos:" <> video_id, params, socket) do
+    last_seen_order = params["last_seen_order"] || 0
     video = Repo.get!(Rumbl.Video, video_id)
 
     annotations = Repo.all(
         from a in assoc(video, :annotations),
-        order_by: [asc: a.at, asc: a.id],
+        where: a.order > ^last_seen_order,
+        order_by: [asc: a.at, asc: a.order],
         limit: 200,
         preload: [:user]
       )
     resp = %{annotations: Phoenix.View.render_many(annotations, Rumbl.AnnotationView, "annotation.json")}
-
+    # IEx.pry
     {:ok, resp, assign(socket, :video_id, video_id)}
   end
 
@@ -26,12 +29,14 @@ defmodule Rumbl.VideoChannel do
       |> build_assoc(:annotations, video_id: socket.assigns.video_id)
       |> Rumbl.Annotation.changeset(params)
 
+    # IEx.pry
     case Repo.insert(changeset) do
       {:ok, annotation} ->
         broadcast! socket, "new_annotation", %{
           id: annotation.id,
           user: Rumbl.UserView.render("user.json", %{user: user}),
           body: annotation.body,
+          order: annotation.order,
           at: annotation.at
         }
         {:reply, :ok, socket}

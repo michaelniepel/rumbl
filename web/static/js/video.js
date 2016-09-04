@@ -28,6 +28,7 @@ let Video = {
     })
 
     videoChannel.on("new_annotation", (resp) => {
+      videoChannel.params.last_seen_order = resp.order
       this.renderAnnotation(msgContainer, resp)
     })
 
@@ -40,6 +41,10 @@ let Video = {
 
     videoChannel.join()
       .receive("ok", ({annotations}) => {
+        let orders = annotations.map(ann => ann.order)
+        if (orders.length > 0) {
+          videoChannel.params.last_seen_order = Math.max(...orders)
+        }
         this.scheduleMessages(msgContainer, annotations)
         // annotations.forEach(ann => this.renderAnnotation(msgContainer, ann))
       })
