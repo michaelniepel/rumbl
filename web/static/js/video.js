@@ -1,7 +1,6 @@
 import Player from "./player"
 
 let Video = {
-
   init(socket, element) {
     if (!element) return
     let playerId = element.getAttribute("data-player-id")
@@ -11,7 +10,6 @@ let Video = {
       this.onReady(videoId, socket)
     })
   },
-
   onReady(videoId, socket) {
     let msgContainer = document.getElementById("msg-container")
     let msgInput = document.getElementById("msg-input")
@@ -35,19 +33,25 @@ let Video = {
 
     videoChannel.join()
       .receive("ok", ({annotations}) => {
-        annotations.forEach(ann => this.renderAnnotation(msgContainer, ann))
+        this.scheduleMessages(msgContainer, annotations)
+        // annotations.forEach(ann => this.renderAnnotation(msgContainer, ann))
       })
       .receive("error", reason => {
         console.error("join failed", reason)
       })
   },
-
+  scheduleMessages(msgContainer, annotations) {
+    setTimeout(() => {
+      let ctime = Player.getCurrentTime()
+      let remaining = this.renderAtTime(annotations, ctime, msgContainer)
+      this.scheduleMessages(msgContainer, remaining)
+    }, 1000)
+  },
   esc(str) {
     let div = document.createElement("div")
     div.appendChild(document.createTextNode(str))
     return div.innerHTML
   },
-
   renderAnnotation(msgContainer, {user, body, at}) {
     let template = document.createElement("div")
     template.innerHTML = `
@@ -57,6 +61,16 @@ let Video = {
     `
     msgContainer.appendChild(template)
     msgContainer.scrollTop = msgContainer.scrollHeight
+  },
+  renderAtTime(annotations, seconds, msgContainer) {
+    return annotations.filter( ann => {
+      if (ann.at > seconds) {
+        return true
+      } else {
+        this.renderAnnotation(msgContainer, ann)
+        return false
+      }
+    })
   },
 }
 
