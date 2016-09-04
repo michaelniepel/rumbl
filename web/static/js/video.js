@@ -55,7 +55,8 @@ let Video = {
   renderAnnotation(msgContainer, {user, body, at}) {
     let template = document.createElement("div")
     template.innerHTML = `
-      <a href="#" data-seek="${this.esc(at)}"
+      <a href="#" data-seek="${this.esc(at)}">
+        [${this.formatTime(at)}]
         <b>${this.esc(user.username)}</b>: ${this.esc(body)}
       </a>
     `
@@ -72,6 +73,11 @@ let Video = {
       }
     })
   },
+  formatTime(at) {
+    let date = new Date(null)
+    date.setSeconds(at / 1000)
+    return date.toISOString().substr(14, 5)
+  }
 }
 
 
