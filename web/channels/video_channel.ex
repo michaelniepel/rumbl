@@ -1,4 +1,3 @@
-require IEx
 defmodule Rumbl.VideoChannel do
   use Rumbl.Web, :channel
 
@@ -14,7 +13,6 @@ defmodule Rumbl.VideoChannel do
         preload: [:user]
       )
     resp = %{annotations: Phoenix.View.render_many(annotations, Rumbl.AnnotationView, "annotation.json")}
-    # IEx.pry
     {:ok, resp, assign(socket, :video_id, video_id)}
   end
 
@@ -29,7 +27,6 @@ defmodule Rumbl.VideoChannel do
       |> build_assoc(:annotations, video_id: socket.assigns.video_id)
       |> Rumbl.Annotation.changeset(params)
 
-    # IEx.pry
     case Repo.insert(changeset) do
       {:ok, annotation} ->
         broadcast! socket, "new_annotation", %{
