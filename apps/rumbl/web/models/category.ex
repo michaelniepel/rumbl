@@ -12,7 +12,8 @@ defmodule Rumbl.Category do
   """
   def changeset(struct, params \\ :empty) do
     struct
-    |> cast(params, [:name])
+    |> cast(params, [:name], [:name])
+
   end
 
   def alphabetical(query) do
