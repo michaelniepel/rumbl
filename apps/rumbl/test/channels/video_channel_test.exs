@@ -28,4 +28,13 @@ defmodule Rumbl.Channels.VideoChannelTest do
     assert_broadcast "new_annotation", %{}
   end
 
+  test "new annotation triggers InfoSys", %{socket: socket, video: vid} do
+    insert_user(username: "wolfram")
+    {:ok, _, socket} = subscribe_and_join(socket, "videos:#{vid.id}", %{})
+    ref = push socket, "new_annotation", %{body: "1+1", at: 123}
+    assert_reply ref, :ok, %{}
+    assert_broadcast "new_annotation", %{body: "1+1", at: 123}
+    assert_broadcast "new_annotation", %{body: "2", at: 123}
+  end
+
 end
