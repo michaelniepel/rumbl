@@ -23,7 +23,7 @@ config :rumbl, Rumbl.Endpoint,
 config :rumbl, Rumbl.Repo,
   adapter: Mongo.Ecto,
   url: System.get_env("MONGODB_URI"),
-  pool_size: String.to_integer(System.get_env("POOL_SIZE") || 20),
+  pool_size: String.to_integer(System.get_env("POOL_SIZE") || "20"),
 
 # Do not print debug messages in production
 config :logger, level: :info
