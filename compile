@@ -1,5 +1,0 @@
-# apps/rumbl
-cd ./apps/rumbl
-npm install
-brunch build --production
-mix phoenix.digest
