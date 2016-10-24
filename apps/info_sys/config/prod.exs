@@ -1,3 +1,3 @@
 use Mix.Config
 
-import_config "prod.secret.exs"
+config :info_sys, :wolfram, app_id: System.get_env("WOLFRAM_APP_ID")
