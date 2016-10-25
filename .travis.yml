@@ -1,6 +1,6 @@
 {
   "language": "elixir",
-  "sudo": false,
+  "sudo": "required",
   "before_script": [
     "mix deps.get --only test"
   ],
